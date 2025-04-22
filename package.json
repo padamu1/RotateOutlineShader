@@ -1,0 +1,16 @@
+{
+  "name": "com.simulfactory.rotateoutlineshader",
+  "version": "1.0.0",
+  "displayName": "RotateOutlineShader",
+  "description": "Shader with rotating outline (run on urp)",
+  "unity": "2021.3",
+  "dependencies": {
+  },
+  "keywords": [
+  ],
+  "author": {
+    "name": "Mywatt",
+    "email": "padamu1@naver.com",
+    "url": "https://github.com/padamu1"
+  }
+}
