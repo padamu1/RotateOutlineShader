@@ -1,6 +1,6 @@
 {
   "name": "com.simulfactory.rotateoutlineshader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "RotateOutlineShader",
   "description": "Shader with rotating outline (run on urp)",
   "unity": "2021.3",

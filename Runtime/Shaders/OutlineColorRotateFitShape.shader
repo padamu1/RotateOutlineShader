@@ -23,10 +23,9 @@ Shader "UI/OutlineColorRotateFitShape"
             "CanUseSpriteAtlas"="True"
         }
         
-        // no mask shader
         Pass
         {
-            Name "NoMask"
+            Name "Fit Shape"
             Tags { "LightMode"="SRPDefaultUnlit" }
 
             Stencil
@@ -88,8 +87,6 @@ Shader "UI/OutlineColorRotateFitShape"
                     discard;
             
                 float2 pixelSize = float2(ddx(i.uv.x), ddy(i.uv.y)) * _BorderThickness;
-
-                _BorderThickness *= 0.5;
                 
                 float2 left = i.uv + float2(-pixelSize.x - _BorderThickness, 0);
                 float2 right = i.uv + float2(pixelSize.x + _BorderThickness, 0);
@@ -101,12 +98,9 @@ Shader "UI/OutlineColorRotateFitShape"
                 float alphaUp     = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, up).a;
                 float alphaDown   = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, down).a;
             
-                float edge = step(0.5, alpha - alphaLeft) +
-                             step(0.5, alpha - alphaRight) +
-                             step(0.5, alpha - alphaUp) +
-                             step(0.5, alpha - alphaDown);
+                bool edge = alphaLeft <= 0 || alphaRight <= 0 || alphaUp <= 0 || alphaDown <= 0;
             
-                if (edge > 0)
+                if (edge)
                 {
                     if (_Rainbow == 1.0)
                     {
