@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RotateOutlineShaderFitShape
-  m_Shader: {fileID: 4800000, guid: 17eeef07e1e574bfeb8da56f33b429ba, type: 3}
+  m_Shader: {fileID: 4800000, guid: 9534c605351693b4180f039f7773a3ac, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -62,7 +62,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BorderThickness: 0.488
+    - _BorderThickness: 0.027
     - _Brightness: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
