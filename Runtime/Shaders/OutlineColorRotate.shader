@@ -11,6 +11,14 @@ Shader "UI/OutlineColorRotate"
         [MaterialToggle] _Rainbow("Rainbow", Float) = 0
         _Saturation("Rainbow Saturation", Range(0, 1)) = 1.0
         _Brightness("Rainbow Brightness", Range(0, 1)) = 1.0
+
+		[HideInInspector][Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp ("Stencil Comparison", Float) = 8
+		[HideInInspector] _Stencil ("Stencil ID", Float) = 0
+		[HideInInspector][Enum(UnityEngine.Rendering.StencilOp)] _StencilOp ("Stencil Operation", Float) = 0
+		[HideInInspector] _StencilWriteMask ("Stencil Write Mask", Float) = 255
+		[HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
+
+		[HideInInspector] _ColorMask ("Color Mask", Float) = 15
     }
 
     SubShader
@@ -23,28 +31,29 @@ Shader "UI/OutlineColorRotate"
             "CanUseSpriteAtlas"="True"
         }
         
+        // 마스크 없을 때
         Pass
         {
-            Name "NoMask"
+            Name "OutLine"
             Tags { "LightMode"="SRPDefaultUnlit" }
 
             Stencil
             {
-                Ref 1
-                ReadMask 255
-                Comp LEqual
-                Pass Keep
+			    Ref [_Stencil]
+			    Comp [_StencilComp]
+			    Pass [_StencilOp]
+			    ReadMask [_StencilReadMask]
+			    WriteMask [_StencilWriteMask]
             }
 
             Cull Off
             ZWrite Off
             Blend SrcAlpha OneMinusSrcAlpha
-            ColorMask RGBA
+		    ColorMask [_ColorMask]
 
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile __ UNITY_UI_CLIP_RECT
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct vert_input { float4 vertex : POSITION; float2 uv : TEXCOORD0; };
@@ -61,7 +70,6 @@ Shader "UI/OutlineColorRotate"
             float4 _MainTex_ST;
             float4 _Color, _StartColor, _EndColor;
             float _BorderThickness, _Speed, _Rainbow, _Saturation, _Brightness;
-            float4 _ClipRect;
 
             float NormalizeAngle(float2 p) { float angle = atan2(p.y, p.x); return frac((angle / 6.28318) + 0.5); }
 
@@ -83,11 +91,6 @@ Shader "UI/OutlineColorRotate"
 
             half4 frag(pixel_input i) : SV_Target
             {
-                #ifdef UNITY_UI_CLIP_RECT
-                if (any(i.worldPos.xy < _ClipRect.xy) || any(i.worldPos.xy > _ClipRect.zw))
-                    discard;
-                #endif
-
                 float2 pos = i.localUV;
                 float maxAbs = max(abs(pos.x), abs(pos.y));
                 float4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * _Color;
